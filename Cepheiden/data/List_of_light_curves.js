@@ -1,0 +1,1 @@
+var cephFiles=["0001_Cepheid_light_curve.js","0002_Cepheid_light_curve.js","0003_Cepheid_light_curve.js","0004_Cepheid_light_curve.js","0005_Cepheid_light_curve.js","0006_Cepheid_light_curve.js","0007_Cepheid_light_curve.js","0008_Cepheid_light_curve.js","0009_Cepheid_light_curve.js","0010_Cepheid_light_curve.js"]
