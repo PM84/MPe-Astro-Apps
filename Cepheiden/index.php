@@ -122,7 +122,7 @@
 //                 text(widthBox/2+margin_x+90,y_Teff+48, "eff",ctx,"10px Arial",Math.PI*2,"#000","center");
                 text(canvasWidth/2,margin_y/2-5,"Hertzsprung Russel Diagramm",ctx,"25px Arial",0,"black","center")
 //                 text(canvasWidth/2,margin_y/2+25,$("#clusterSelect :selected").text(),ctx,"20px Arial",0,"black","center")
-                text(canvasWidth-5,canvasHeight-10,String.fromCharCode(169)+" StR Peter Mayer,2018",ctx,"10px Arial",0,"black","end")
+                text(canvasWidth-5,canvasHeight-10,String.fromCharCode(169)+"  OStR Peter Mayer, 2017-2021",ctx,"10px Arial",0,"black","end")
 
 
                 if($("#HRabsMag").is(":checked")){

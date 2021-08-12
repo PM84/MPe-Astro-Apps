@@ -133,7 +133,7 @@
                 text(canvasWidth/2,margin_y/2-10,"Periode-Helligkeit-Beziehung",ctx,"20px Arial",0,"black","center")
                 text(canvasWidth/2,margin_y/2+5,"von Cepheiden der großen Magellanschen Wolke",ctx,"12px Arial",0,"black","center")
 
-                text(canvasWidth-5,canvasHeight-10,String.fromCharCode(169)+" StR Peter Mayer,2018",ctx,"10px Arial",0,"black","end")
+                text(canvasWidth-5,canvasHeight-10,String.fromCharCode(169)+" OStR Peter Mayer,2021",ctx,"10px Arial",0,"black","end")
 
             }
 
@@ -206,7 +206,6 @@
 
                 if($("#vertLine").is(":checked")){
                     var newPerPos_1=$("#vl_1").val()
-                    //                     console.log(newPerPos);
                     var act_x_Pos_1=Math.round((Math.log10(newPerPos_1))/dpfpp+margin_x)
                     if(act_x_Pos_1>=margin_x){
                         draw_vertical_line(act_x_Pos_1,Math.round((newPerPos_1)*100)/100);

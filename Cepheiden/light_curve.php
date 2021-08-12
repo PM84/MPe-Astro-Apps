@@ -133,7 +133,7 @@
                     // Diagramm Titel
                     text(canvasWidth/2,margin_y/2-5,"Lichtkurve eines Cepheiden",ctx,"25px Arial",0,"black","center")
 
-                    text(canvasWidth-5,canvasHeight-10,String.fromCharCode(169)+" StR Peter Mayer,2018",ctx,"10px Arial",0,"black","end")
+                    text(canvasWidth-5,canvasHeight-10,String.fromCharCode(169)+"  OStR Peter Mayer, 2017-2021",ctx,"10px Arial",0,"black","end")
 
                 }
 
