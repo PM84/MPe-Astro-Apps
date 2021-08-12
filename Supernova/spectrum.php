@@ -157,6 +157,8 @@
                     success: function(data) {
                         // console.log("Spectrum data from URL");
                         var spectra = filter_spectra(data[SupernovaName].spectra);
+                        console.log(data);
+                        console.log(spectra)
                         set_localcache(urlspectra, spectra);
                         setUp(spectra);
                     },
@@ -203,14 +205,13 @@
             }
 
             function filter_spectra(spektra) {
-                const spektrafiltered = [];
+                var spektrafiltered = [];
                 $.each(spektra, function(i, spectrum) {
-                    if (spectrum.u_fluxes != "Uncalibrated" && (!spectrum.hasOwnProperty("observer") || spectrum.observer != "Unknown")) {
+                    if (spectrum.u_fluxes != "Uncalibrated" && !spectrum.hasOwnProperty("observer")) {
                         spektrafiltered.push(spectrum);
                     }
                 });
                 return spektrafiltered;
-
             }
 
             function setUp(json) {
