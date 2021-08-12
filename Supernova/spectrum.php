@@ -157,8 +157,6 @@
                     success: function(data) {
                         // console.log("Spectrum data from URL");
                         var spectra = filter_spectra(data[SupernovaName].spectra);
-                        console.log(data);
-                        console.log(spectra)
                         set_localcache(urlspectra, spectra);
                         setUp(spectra);
                     },
@@ -193,7 +191,6 @@
                         } else {
                             xdiff = (e.touches[0].pageX - mouseReference.xbound) - mouseReference.x
                         }
-                        // console.log("Diff = " + xdiff)
                         drawImage(xdiff);
 
                     }
@@ -205,13 +202,24 @@
             }
 
             function filter_spectra(spektra) {
-                var spektrafiltered = [];
-                $.each(spektra, function(i, spectrum) {
-                    if (spectrum.u_fluxes != "Uncalibrated" && !spectrum.hasOwnProperty("observer")) {
-                        spektrafiltered.push(spectrum);
-                    }
-                });
-                return spektrafiltered;
+                if (JSON.stringify(spektra).length / (1024 * 1024) < 5) {
+                    return spektra
+                }
+                var maxwavelength = 15000
+                var minwavelength = 2000
+                while (JSON.stringify(spektra).length / (1024 * 1024) >= 5) {
+                    var spektrafiltered_temp = [];
+                    $.each(spektra, function(i, spectrum) {
+                        var first = spectrum.data.shift();
+                        var last = spectrum.data.pop();
+                        if (first[0] > minwavelength && last[0] < maxwavelength) {
+                            spektrafiltered_temp.push(spectrum);
+                        }
+                    });
+                    spektra = spektrafiltered_temp;
+                    maxwavelength = 0.95 * maxwavelength;
+                }
+                return spektra
             }
 
             function setUp(json) {
