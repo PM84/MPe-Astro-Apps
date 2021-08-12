@@ -26,6 +26,9 @@
             </center>
         </div>
         <div class="col-sm-12">
+            <div class="col-sm-12">
+                <button id="ResetOffset" type="button" class="btn btn-outline-secondary col-sm-2 col-sm-push-10">Reset Offset</button>
+            </div>
             <h3>Supernova auswählen: </h3>
             <select class="form-control" id="SNSelect">
             </select>
@@ -33,8 +36,6 @@
             <select class="form-control" id="SpektrumSelect">
             </select>
             <hr>
-            <div id="dist"></div>
-            <div id="metallicity"></div>
             <h3>Optionen</h3>
             <ul class="list-group">
                 <li class="list-group-item">
@@ -79,7 +80,6 @@
         for (var i = 0; i < arrayLength; i++) {
             var j = i + 1;
             var o = new Option("option text", SuperNovae[i]);
-            /// jquerify the DOM object 'o' so we can use the html method
             $(o).html(SuperNovae[i]);
             $("#SNSelect").append(o);
         }
@@ -91,44 +91,9 @@
             data: {}
         };
 
-        // var localCache = {
-        //     data: {},
-        //     remove: function(url) {
-        //         url = CryptoJS.MD5(url);
-        //         delete localCache.data[url];
-        //     },
-        //     exist: function(url) {
-        //         url = CryptoJS.MD5(url);
-        //         console.log("exist?");
-        //         console.log(this.data[url])
-        //         if (localCache.data[url] === undefined) {
-        //             console.log('EXISTIERT NICHT');
-        //             return false
-        //         } else {
-        //             console.log('EXISTIERT');
-        //             return true
-        //         }
-        //         console.log(localCache.data[url] !== undefined);
-        //         // console.log(localCache.data[url] !== null);
-        //         return localCache.data[url] !== undefined // && localCache.data[url] !== null;
-        //     },
-        //     get: function(url) {
-        //         url = CryptoJS.MD5(url);
-        //         console.log('Getting from cache for url' + url);
-        //         return localCache.data[url];
-        //     },
-        //     set: function(url, cachedData, callback) {
-        //         url = CryptoJS.MD5(url);
-        //         // localCache.remove(url);
-        //         localCache.data[url] = cachedData;
-        //         if ($.isFunction(callback)) callback(cachedData);
-        //     }
-        // };
-
         $(document).ready(function() {
 
             function drawImage() {
-                // console.log(localCache);
                 $("#loader").css("left", canvasWidth / 2 - 30);
                 $("#loader").css("top", canvasHeight / 2 - 30);
                 $("#loader").show();
@@ -139,42 +104,6 @@
                 var urlredshift = "https://api.astrocats.space/" + SupernovaName + "/redshift";
                 var urlmaxlightdate = "https://api.astrocats.space/" + SupernovaName + "/maxdate";
 
-                // console.log(localCache.data)
-                // console.log(localCache.data['85a0a235593c48f57033fd5ab951f286']);
-
-                // jQuery.ajax({
-                //     url: urlmaxlightdate,
-                //     dataType: "json",
-                //     beforeSend: function() {
-                //         console.log(localCache.exist(urlmaxlightdate))
-                //         console.log((urlmaxlightdate))
-                //         if (localCache.exist(urlmaxlightdate)) {
-                //             console.log("JSON aus Cache laden");
-                //             var json = localCache.get(urlmaxlightdate);
-                //             console.log(json)
-                //             var dateparts = json[SupernovaName].maxdate.shift().value.split("/");
-                //             var maxlightdate = new Date(dateparts[0], dateparts[1] - 1, dateparts[2]);
-                //             mjd = maxlightdate.getMJD();
-                //             console.log("MJD CACHE: " + mjd);
-                //             return false;
-                //         }
-                //         console.log("JSON von URL laden");
-                //         return true;
-                //     },
-                //     success: function(data) {
-                //         var dateparts = data[SupernovaName].maxdate.shift().value.split("/");
-                //         var maxlightdate = new Date(dateparts[0], dateparts[1] - 1, dateparts[2]);
-                //         mjd = maxlightdate.getMJD();
-                //         console.log(urlmaxlightdate)
-                //         localCache.set(urlmaxlightdate, data);
-                //         console.log("MJD NEW: " + mjd);
-                //     },
-                // });
-
-                // console.log(CryptoJS.MD5(urlmaxlightdate));
-                // console.log(CryptoJS.MD5(urlmaxlightdate).toString());
-                // console.log(get_localcache(urlmaxlightdate))
-                // console.log(clear_localcache())
                 $.ajax({
                     url: urlmaxlightdate,
                     dataType: "json",
@@ -213,17 +142,6 @@
                     },
                 });
 
-                // $.getJSON(urlmaxlightdate, function(json) {
-                //     // var maxdates = json[SupernovaName].maxdate;
-                //     var dateparts = json[SupernovaName].maxdate.shift().value.split("/");
-                //     var maxlightdate = new Date(dateparts[0], dateparts[1] - 1, dateparts[2]);
-                //     mjd = maxlightdate.getMJD();
-                // });
-
-                // $.getJSON(urlredshift, function(json) {
-                //     redshift = calculate_average_redshift(json[SupernovaName].redshift);
-                // });
-
                 $.ajax({
                     url: urlspectra,
                     dataType: "json",
@@ -243,10 +161,6 @@
                         setUp(spectra);
                     },
                 });
-
-                // $.getJSON(urlspectra, function(json) {
-
-                // });
 
                 // ================ Verschiebung durch Maus ermitteln ==== START
                 const mouseReference = {
@@ -411,6 +325,7 @@
                 if ($("#hydrogen").is(":checked")) {
                     $.each(spectrallines.hydrogen, function(index, value) {
                         draw_vertical_line(margin_x + (value.lambda - lambdaMin) / dLambdapp + xdiff, value.title, "red", lineDash);
+                        draw_vertical_line(margin_x + (value.lambda - lambdaMin) / dLambdapp, value.title, "red", lineDash, 20);
                     })
                 }
                 if ($("#silicon").is(":checked")) {
@@ -418,14 +333,22 @@
                         if (value.type == 'absorption') {
                             lineDash = [10, 10];
                         }
-                        draw_vertical_line(margin_x + (value.lambda - lambdaMin) / dLambdapp + xdiff, index, "green", lineDash);
+                        draw_vertical_line(margin_x + (value.lambda - lambdaMin) / dLambdapp + xdiff, value.title, "green", lineDash);
+                        draw_vertical_line(margin_x + (value.lambda - lambdaMin) / dLambdapp, value.title, "green", lineDash, 20);
                         lineDash = [];
                     })
                 }
                 if ($("#helium").is(":checked")) {
                     $.each(spectrallines.helium, function(index, value) {
                         draw_vertical_line(margin_x + (value.lambda - lambdaMin) / dLambdapp + xdiff, value.title, "purple", lineDash);
+                        draw_vertical_line(margin_x + (value.lambda - lambdaMin) / dLambdapp, value.title, "purple", lineDash, 20);
                     })
+                }
+
+                if (xdiff != 0) {
+                    text(margin_x + widthBox - 52, margin_y + 20, "Δλ = " + (Math.round(xdiff * dLambdapp * 10) / 10) + "Å", ctx, "15px Arial", Math.Pi / 2, 'blue', "center")
+                    // draw_rectFill(margin_x + widthBox - 75, margin_y - 5, margin_x + widthBox + 25, margin_y - 25, ctx, 2, 0, "#fff", 1)
+                    draw_rect(margin_x + widthBox - 100, margin_y + 3, margin_x + widthBox - 4, margin_y + 25, ctx, 2, 0, "blue")
                 }
 
                 // Draw Spektrum
@@ -437,6 +360,13 @@
                     xPos = margin_x + (tick - lambdaMin) / dLambdapp;
                     line(xPos, heightBox + margin_y, xPos, heightBox + margin_y + 10, ctx, "black");
                     text(xPos, heightBox + margin_y + 20, roundUp(tick, 0), ctx, "10px Arial", 0, "black", "center")
+
+                    if (xdiff != 0) {
+                        if (xPos + xdiff > margin_x && xPos + xdiff < widthBox + margin_x) {
+                            line(xPos + xdiff, heightBox + margin_y, xPos + xdiff, heightBox + margin_y + 13, ctx, "blue");
+                            text(xPos + xdiff, heightBox + margin_y + 30, roundUp(tick, 0), ctx, "10px Arial", 0, "blue", "center")
+                        }
+                    }
                     tick = tick + dLambdaAxis;
                 }
 
@@ -503,10 +433,16 @@
                 text(widthBox + margin_x + 30, y_line + 5, DisplVal, ctx, "15px Arial", Math.Pi / 2, "blue", "center")
             }
 
-            function draw_vertical_line(xPos, value, color, lineDash = []) {
+            function draw_vertical_line(xPos, value, color, lineDash = [], length = 0) {
                 if (xPos > margin_x && xPos < widthBox) {
-                    line(xPos, heightBox + margin_y, xPos, margin_y, ctx, color, lineDash);
-                    text(xPos, margin_y - 10, value, ctx, "15px Arial", Math.Pi / 2, color, "center")
+                    var bottomup = margin_y;
+                    if (length) {
+                        bottomup = heightBox + margin_y - length;
+                    }
+                    line(xPos, heightBox + margin_y, xPos, bottomup, ctx, color, lineDash);
+                    if (!length) {
+                        text(xPos, margin_y - 10, value, ctx, "15px Arial", Math.Pi / 2, color, "center");
+                    }
                 }
                 // draw_rectFill(t_Puls_Pos - 25, margin_y - 5, t_Puls_Pos + 25, margin_y - 25, ctx, 2, 0, "#fff", 1)
                 // draw_rect(t_Puls_Pos - 25, margin_y - 5, t_Puls_Pos + 25, margin_y - 25, ctx, 2, 0, "red")
@@ -544,10 +480,6 @@
                 [lambda, flux] = data.shift();
                 flux = convertFloatNumber(flux) * scale;
                 lambda = deredshift_wavelength(lambda, redshift)
-                //margin_x = -390;
-                // eIndex = flux.indexOf("e");
-                // flux = flux.substr(0, eIndex - 1);
-                // flux = parseFloat(flux);
                 ctx.moveTo(margin_x + (lambda - LambdaMin) / dLambdaPP, heightBox + margin_y - (flux - fluxMin) / lFluxPP);
 
                 $.each(data, function(index, row) {
@@ -563,13 +495,10 @@
                     ctx.arc(margin_x + (lambda - LambdaMin) / dLambdaPP, heightBox + margin_y - (flux - fluxMin) / lFluxPP, this.pointRadius, 0, 2 * Math.PI, false);
                     ctx.fill();
                     ctx.closePath();
-                    // console.log("margin_x + (lambda - LambdaMin) / dLambdaPP: " + (margin_x + (lambda - LambdaMin) / dLambdaPP));
-                    // console.log("heightBox + margin_y - (flux - fluxMin) / lFluxPP: " + (heightBox + margin_y - (flux - fluxMin) / lFluxPP));
 
                     // position for next segment  
                     ctx.beginPath();
                     ctx.moveTo(margin_x + (lambda - LambdaMin) / dLambdaPP, heightBox + margin_y - (flux - fluxMin) / lFluxPP);
-                    // console.log("x: " + lambda + "; y: " + flux + " eingetragen");
                 });
                 ctx.restore();
             };
@@ -597,39 +526,13 @@
             $("#SpektrumSelect").on('change', function() {
                 drawImage();
             });
+            $("#ResetOffset").on('click', function() {
+                xdiff = 0;
+                drawImage();
+            });
             drawImage();
-            // $('#loader').hide();
 
         });
-
-
-
-        // $(function() {
-        //     var url = '/echo/jsonp/';
-        //     $('#ajaxButton').click(function(e) {
-        //         $.ajax({
-        //             url: url,
-        //             data: {
-        //                 test: 'value'
-        //             },
-        //             cache: true,
-        //             beforeSend: function() {
-        //                 if (localCache.exist(url)) {
-        //                     doSomething(localCache.get(url));
-        //                     return false;
-        //                 }
-        //                 return true;
-        //             },
-        //             complete: function(jqXHR, textStatus) {
-        //                 localCache.set(url, jqXHR, doSomething);
-        //             }
-        //         });
-        //     });
-        // });
-
-        // function doSomething(data) {
-        //     console.log(data);
-        // }
     </script>
 </body>
 
