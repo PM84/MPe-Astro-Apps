@@ -15,12 +15,12 @@ var spectrallines = {
         "1": {
             'lambda': 6355,
             'title': 'SiII',
-            'type': 'absorption',
+            'type': 'emission',
         },
         "2": {
             'lambda': 6150,
             'title': 'SiII',
-            'type': 'absorption',
+            'type': 'emission',
         },
         "3": {
             'lambda': 3858,
@@ -30,12 +30,12 @@ var spectrallines = {
         "4": {
             'lambda': 5972,
             'title': 'SiII',
-            'type': 'absorption',
+            'type': 'emission',
         },
         "5": {
             'lambda': 4130,
             'title': 'SiII',
-            'type': 'absorption',
+            'type': 'emission',
         },
     },
     'helium': {
