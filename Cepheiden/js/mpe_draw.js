@@ -8,8 +8,9 @@ function point(x, y,r, canv,colorLine,colorFill){
     canv.stroke();
 }
 
-function line(x_start, y_start,x_end, y_end, canv,colorLine){
+function line(x_start, y_start,x_end, y_end, canv,colorLine, lineDash = []){
     canv.beginPath();
+    canv.setLineDash(lineDash);
     canv.moveTo(x_start,y_start);
     canv.lineTo(x_end, y_end);
     canv.strokeStyle=colorLine;
