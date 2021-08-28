@@ -53,13 +53,13 @@
                             </div>
                         </div>
                     </li>
-                    <!-- <li class="list-group-item">
+                    <li class="list-group-item">
                         Zeitpunkt der maximalen Helligkeit markieren
                         <div class="material-switch pull-right">
                             <input id="maxLight" type="checkbox" class="options_maxLight" />
                             <label for="maxLight" class="label-success" style="margin-top: 10px;"></label>
                         </div>
-                    </li> -->
+                    </li>
                     <li class="list-group-item">
                         Quellen anzeigen
                         <div class="material-switch pull-right">
@@ -92,12 +92,11 @@
         var heightBox = canvasHeight - margin_y - margin_y_bottom;
         var ctx = canvas.getContext("2d");
 
-        for (var i = 0; i < SuperNovae.length; i++) {
-            var j = i + 1;
-            var o = new Option("option text", SuperNovae[i]);
-            $(o).html(SuperNovae[i]);
+        $.each(SuperNovaeData, function(SupernovaName, SupernovaData) {
+            var o = new Option("option text", SupernovaName);
+            $(o).html(SupernovaName);
             $("#SNSelect").append(o);
-        }
+        });
 
         var lightcurvedata = {};
         var objectdata = {};
@@ -149,7 +148,7 @@
 
                 // Diagramm Titel
                 text(canvasWidth / 2, margin_y / 2 - 8, "Photometrie von " + snName, ctx, "25px Arial", 0, "black", "center")
-                // text(canvasWidth / 2, margin_y / 2 + 10, subtitle, ctx, "16px Arial", 0, "black", "center")
+                text(canvasWidth / 2, margin_y / 2 + 10, $("#BandSelect").val() + "-Band", ctx, "16px Arial", 0, "black", "center")
 
                 text(canvasWidth - 5, canvasHeight - 10, String.fromCharCode(169) + "  OStR Peter Mayer, 2017-2021", ctx, "10px Arial", 0, "black", "end")
 
@@ -158,7 +157,7 @@
             function get_lightcurvedata() {
                 SupernovaName = $("#SNSelect").val()
 
-                urls.urldata = "https://api.astrocats.space/" + SupernovaName + "/maxabsmag+maxappmag+maxvisualabsmag+maxband+lumdist+comovingdist+kcorrected+scorrected+mcorrected+bandset+error+source+dec+ra+claimedtype";
+                urls.urldata = "https://api.astrocats.space/" + SupernovaName + "/maxdate+maxabsmag+maxappmag+maxvisualabsmag+maxband+lumdist+comovingdist+kcorrected+scorrected+mcorrected+bandset+error+source+dec+ra+claimedtype";
                 $.ajax({
                     url: urls.urldata,
                     dataType: "json",
@@ -167,12 +166,17 @@
                     beforeSend: function() {
                         if (get_localcache(urls.urldata) !== null) {
                             objectdata = get_localcache(urls.urldata)
+                            mjd = objectdata.mjd;
                             return false;
                         }
                         return true;
                     },
                     success: function(data) {
                         objectdata = data[SupernovaName];
+                        var dateparts = SuperNovaeData[SupernovaName].maxlightdate.split("/");
+                        var maxlightdate = new Date(dateparts[0], dateparts[1] - 1, dateparts[2]);
+                        mjd = maxlightdate.getMJD();
+                        objectdata.mjd = mjd;
                         // lightcurvedata = sort_lightcurvedata(data[SupernovaName].photometry);
                         set_localcache(urls.urldata, objectdata);
                     },
@@ -186,6 +190,7 @@
                     async: false,
                     beforeSend: function() {
                         if (get_localcache(urls.urllightcurve) !== null) {
+                            console.log("Use cache");
                             lightcurvedata = get_localcache(urls.urllightcurve)
                             // setUp(lightcurvedata);
                             return false;
@@ -195,25 +200,6 @@
                     success: function(data) {
                         lightcurvedata = sort_lightcurvedata(data[SupernovaName].photometry);
                         set_localcache(urls.urllightcurve, lightcurvedata);
-                    },
-                });
-
-                urls.urlmaxlightdate = "https://api.astrocats.space/" + SupernovaName + "/maxdate";
-                $.ajax({
-                    url: urls.urlmaxlightdate,
-                    dataType: "json",
-                    beforeSend: function() {
-                        if (get_localcache(urls.urlmaxlightdate) !== null) {
-                            mjd = get_localcache(urls.urlmaxlightdate);
-                            return false;
-                        }
-                        return true;
-                    },
-                    success: function(data) {
-                        var dateparts = data[SupernovaName].maxdate.shift().value.split("/");
-                        var maxlightdate = new Date(dateparts[0], dateparts[1] - 1, dateparts[2]);
-                        mjd = maxlightdate.getMJD();
-                        set_localcache(urls.urlmaxlightdate, mjd);
                     },
                 });
 
@@ -263,14 +249,6 @@
                 var dtimepp = dtime / widthBox; // Time pro Pixel
                 var dtimeAxis = (parseFloat(min_max_time['maxtime']) - parseFloat(min_max_time['mintime'])) / 10
 
-                // $('.RangeClsHor').attr('min', MagMaxAxis);
-                // $('.RangeClsHor').attr('max', MagMinAxis);
-                // $('.RangeClsHor').attr('value', (min_max_mag['minmagaxis'] + min_max_mag['maxmagaxis']) / 2);
-
-                // $('.RangeClsVert').attr('min', min_max_time['timemin']);
-                // $('.RangeClsVert').attr('max', min_max_time['timemax']);
-                // $('.RangeClsVert').attr('value', (min_max_time['timemin'] + min_max_time['timemax']) / 2);
-
                 $.each(lightcurvedata, function(i, row) {
                     time = row[0];
                     mag = row[1];
@@ -286,18 +264,10 @@
                 }
                 // if (tick - mjd > 0) {
                 while (tick <= min_max_time['maxtime']) {
-
                     var diff = Math.round(tick - mjd);
                     xPos = margin_x + (tick - min_max_time['mintime']) / dtimepp;
                     line(xPos, heightBox + margin_y, xPos, heightBox + margin_y + 10, ctx, "black");
                     text(xPos, heightBox + margin_y + 20, diff, ctx, "10px Arial", 0, "black", "center")
-
-                    // if (xdiff != 0) {
-                    //     if (xPos + xdiff > margin_x && xPos + xdiff < widthBox + margin_x) {
-                    //         line(xPos + xdiff, heightBox + margin_y, xPos + xdiff, heightBox + margin_y + 13, ctx, "blue");
-                    //         text(xPos + xdiff, heightBox + margin_y + 30, roundUp(tick, 0), ctx, "10px Arial", 0, "blue", "center")
-                    //     }
-                    // }
                     tick = tick + Math.round(dtimeAxis);
                     tick = tick + (dtimeAxis);
                 }
@@ -305,16 +275,13 @@
                 // Mark zero Point.
                 if ($("#maxLight").is(":checked")) {
                     ctx.setLineDash([0]);
-                    // ctx.lineWidth = 1;
+                    console.log(mjd - min_max_time['mintime'])
                     xPos = margin_x + (mjd - min_max_time['mintime']) / dtimepp;
                     line(xPos, heightBox + margin_y, xPos, heightBox + margin_y + 10, ctx, "red");
                     text(xPos, heightBox + margin_y + 20, 0, ctx, "10px Arial", 0, "red", "center");
                     ctx.setLineDash([5, 5]);
-                    // ctx.lineWidth = 1;
                     draw_vertical_line(xPos, Math.round((min_max_mag['minmagaxis'] - mag + 19.3) * 100) / 100);
                 }
-
-                // }
 
                 // y-Achse Raster
                 var MagMaxAxis = Math.floor(min_max_mag['maxmagaxis'])
@@ -404,12 +371,6 @@
                 ctx.lineWidth = 5;
                 ctx.strokeStyle = "red";
                 bzCurve(lines, 0.3, 1);
-                // ctx.setLineDash([0]);
-                // ctx.lineWidth = 1;
-                // act_x_Pos = margin_x + (mjd - min_max_time['mintime']) / dtimepp;
-                // draw_vertical_line(act_x_Pos, Math.round((min_max_mag['minmagaxis'] - mag + 19.3) * 100) / 100);
-
-
             }
 
             function sort_lightcurvedata(lightcurvedata) {
@@ -422,7 +383,7 @@
                     lightcurvedatatemp[band].push(row);
                 });
                 $.each(lightcurvedatatemp, function(band, row) {
-                    if (row.length < 10) {
+                    if (row.length < 5) {
                         delete lightcurvedatatemp[band];
                     }
                 });
@@ -510,11 +471,8 @@
             }
 
             function setUp() {
-                $('#BandSelect').children().remove().end();
                 clearCanvas(ctx, canvas);
-                clear_localcache();
                 get_lightcurvedata();
-                set_BandSelect();
             }
 
             function toFixedScientific(x, numDecimals) {
@@ -528,6 +486,9 @@
             }
 
             $("#SNSelect").on('change', function() {
+                $('#BandSelect').children().remove().end();
+                clear_localcache();
+                set_BandSelect();
                 drawImage();
             });
             $(".options_hl").on('mousemove', function() {
