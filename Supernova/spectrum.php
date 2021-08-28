@@ -39,36 +39,7 @@
                 </select>
                 <hr>
                 <h3>Optionen</h3>
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        Wasserstofflinien
-                        <div class="material-switch pull-right">
-                            <input id="hydrogen" type="checkbox" class="options_vl_cb" />
-                            <label for="hydrogen" class="label-success" style="margin-top: 10px;"></label>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        Siliziumlinien
-                        <div class="material-switch pull-right">
-                            <input id="silicon" type="checkbox" class="options_vl_cb" />
-                            <label for="silicon" class="label-success" style="margin-top: 10px;"></label>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        Heliumlinien
-                        <div class="material-switch pull-right">
-                            <input id="helium" type="checkbox" class="options_vl_cb" />
-                            <label for="helium" class="label-success" style="margin-top: 10px;"></label>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        Quellen anzeigen
-                        <div class="material-switch pull-right">
-                            <input id="references" type="checkbox" class="options_references" value=1 />
-                            <label for="references" class="label-success" style="margin-top: 10px;"></label>
-                        </div>
-                    </li>
-                </ul>
+                <ul class="list-group" id="uloptions"></ul>
             </div>
         </div>
         <div id="referencesdiv" class="row" style="display:none;">
@@ -94,13 +65,17 @@
         var heightBox = canvasHeight - margin_y - margin_y_bottom;
         var ctx = canvas.getContext("2d");
         var redshift = 0;
-        var arrayLength = SuperNovae.length;
-        for (var i = 0; i < arrayLength; i++) {
-            var j = i + 1;
-            var o = new Option("option text", SuperNovae[i]);
-            $(o).html(SuperNovae[i]);
+        $.each(SuperNovaeData, function(SupernovaName, SupernovaData) {
+            var o = new Option("option text", SupernovaName);
+            $(o).html(SupernovaName);
             $("#SNSelect").append(o);
-        }
+        });
+        // for (var i = 0; i < arrayLength; i++) {
+        //     var j = i + 1;
+        //     var o = new Option("option text", SuperNovae[i]);
+        //     $(o).html(SuperNovae[i]);
+        //     $("#SNSelect").append(o);
+        // }
         var Spektren;
         var subtitle;
         var xdiff = 0;
@@ -110,10 +85,6 @@
         };
 
         var references = {};
-        // var urlspectra = "";
-        // var urlredshift = "";
-        // var urlmaxlightdate = "";
-        // var urlreferences = "";
         var urls = {};
         urls.urlspectra =
 
@@ -128,41 +99,30 @@
 
                     urls.urlspectra = "https://api.astrocats.space/" + SupernovaName + "/spectra";
                     urls.urlredshift = "https://api.astrocats.space/" + SupernovaName + "/redshift";
+                    urls.urldata = "https://api.astrocats.space/" + SupernovaName + "/redshift+maxabsmag+maxappmag+maxvisualabsmag+maxband+lumdist+comovingdist+kcorrected+scorrected+mcorrected+bandset+error+source+dec+ra+claimedtype";
                     urls.urlmaxlightdate = "https://api.astrocats.space/" + SupernovaName + "/maxdate";
                     urls.urlreferences = "https://api.sne.space/" + SupernovaName + "/sources/reference"
 
-
                     $.ajax({
-                        url: urls.urlmaxlightdate,
+                        url: urls.urldata,
                         dataType: "json",
                         beforeSend: function() {
-                            if (get_localcache(urls.urlmaxlightdate) !== null) {
-                                mjd = get_localcache(urls.urlmaxlightdate);
+                            if (get_localcache(urls.urldata) !== null) {
+                                data = get_localcache(urls.urldata);
+                                mjd = data.mjd;
+                                redshift = data.redshift;
                                 return false;
                             }
                             return true;
                         },
                         success: function(data) {
-                            var dateparts = data[SupernovaName].maxdate.shift().value.split("/");
+                            var dateparts = SuperNovaeData[SupernovaName].maxlightdate.split("/");
                             var maxlightdate = new Date(dateparts[0], dateparts[1] - 1, dateparts[2]);
                             mjd = maxlightdate.getMJD();
-                            set_localcache(urls.urlmaxlightdate, mjd);
-                        },
-                    });
-
-                    $.ajax({
-                        url: urls.urlredshift,
-                        dataType: "json",
-                        beforeSend: function() {
-                            if (get_localcache(urls.urlredshift) !== null) {
-                                redshift = get_localcache(urls.urlredshift);
-                                return false;
-                            }
-                            return true;
-                        },
-                        success: function(data) {
+                            data.mjd = mjd;
                             redshift = calculate_average_redshift(data[SupernovaName].redshift);
-                            set_localcache(urls.urlredshift, redshift);
+                            data.redshift = redshift;
+                            set_localcache(urls.urldata, data);
                         },
                     });
 
@@ -371,34 +331,27 @@
                     clearCanvas(ctx, canvas);
                     drawBox(snName);
 
-                    var lineDash = [];
-                    if ($("#hydrogen").is(":checked")) {
-                        $.each(spectrallines.hydrogen, function(index, value) {
-                            draw_vertical_line(margin_x + (value.lambda - lambdaMin) / dLambdapp + xdiff, value.title, "red", lineDash);
-                            draw_vertical_line(margin_x + (value.lambda - lambdaMin) / dLambdapp, value.title, "red", lineDash, 20);
-                        })
-                    }
-                    if ($("#silicon").is(":checked")) {
-                        $.each(spectrallines.silicon, function(index, value) {
-                            if (value.type == 'absorption') {
-                                lineDash = [10, 10];
-                            }
-                            draw_vertical_line(margin_x + (value.lambda - lambdaMin) / dLambdapp + xdiff, value.title, "green", lineDash);
-                            draw_vertical_line(margin_x + (value.lambda - lambdaMin) / dLambdapp, value.title, "green", lineDash, 20);
-                            lineDash = [];
-                        })
-                    }
-                    if ($("#helium").is(":checked")) {
-                        $.each(spectrallines.helium, function(index, value) {
-                            draw_vertical_line(margin_x + (value.lambda - lambdaMin) / dLambdapp + xdiff, value.title, "purple", lineDash);
-                            draw_vertical_line(margin_x + (value.lambda - lambdaMin) / dLambdapp, value.title, "purple", lineDash, 20);
-                        })
-                    }
+                    // Hilfslinien für Spektrallinien
+                    $.each(spectrallines, function(id, group) {
+                        if ($("#" + id).is(":checked")) {
+                            $.each(group, function(index, value) {
+                                var lineDash = [];
+                                if (value.type == 'absorption') {
+                                    lineDash = [10, 10];
+                                } else {
+                                    lineDash = [];
+                                }
+                                draw_vertical_line(margin_x + (value.lambda - lambdaMin) / dLambdapp + xdiff, value, value.color, lineDash);
+                                draw_vertical_line(margin_x + (value.lambda - lambdaMin) / dLambdapp, value, value.color, lineDash, 20);
+                                draw_textbox(margin_x + (value.lambda - lambdaMin) / dLambdapp + xdiff, value, value.color, lineDash, 20);
+                            })
+                        }
+                    });
 
                     if (xdiff != 0) {
-                        text(margin_x + widthBox - 52, margin_y + 20, "Δλ = " + (Math.round(xdiff * dLambdapp * 10) / 10) + "Å", ctx, "15px Arial", Math.Pi / 2, 'blue', "center")
-                        // draw_rectFill(margin_x + widthBox - 75, margin_y - 5, margin_x + widthBox + 25, margin_y - 25, ctx, 2, 0, "#fff", 1)
+                        draw_rectFill(margin_x + widthBox - 100, margin_y + 3, margin_x + widthBox - 4, margin_y + 25, ctx, 2, 0, "#fff", 1)
                         draw_rect(margin_x + widthBox - 100, margin_y + 3, margin_x + widthBox - 4, margin_y + 25, ctx, 2, 0, "blue")
+                        text(margin_x + widthBox - 52, margin_y + 20, "Δλ = " + (Math.round(xdiff * dLambdapp * 10) / 10) + "Å", ctx, "15px Arial", Math.Pi / 2, 'blue', "center")
                     }
 
                     // Draw Spektrum
@@ -461,11 +414,21 @@
                         }
                         line(xPos, heightBox + margin_y, xPos, bottomup, ctx, color, lineDash);
                         if (!length) {
-                            text(xPos, margin_y - 10, value, ctx, "15px Arial", Math.Pi / 2, color, "center");
+                            text(xPos, margin_y - 10, value.title, ctx, "15px Arial", Math.Pi / 2, color, "center");
                         }
                     }
-                    // draw_rectFill(t_Puls_Pos - 25, margin_y - 5, t_Puls_Pos + 25, margin_y - 25, ctx, 2, 0, "#fff", 1)
-                    // draw_rect(t_Puls_Pos - 25, margin_y - 5, t_Puls_Pos + 25, margin_y - 25, ctx, 2, 0, "red")
+                }
+
+                function draw_textbox(xPos, value, color, lineDash = [], length = 0) {
+                    if (xPos > margin_x && xPos < widthBox) {
+                        if (value.textshift) {
+                            shift = value.textshift;
+                        } else {
+                            shift = 0;
+                        }
+                        draw_rectFill(xPos - 10 + shift, margin_y + 10, xPos + 10 + shift, margin_y + 90, ctx, 2, 0, "#fff", 1)
+                        text(xPos + 8 + shift, margin_y + 50, value.lambda + "Å", ctx, "18px Arial", -Math.PI / 2, color, "center");
+                    }
                 }
 
                 function drawLine(data, LambdaMin, dLambdaPP, fluxMin, lFluxPP, color, width) {
@@ -505,6 +468,15 @@
                     ctx.restore();
                 };
 
+                // Erstellen der li Elemente in den Optionen. Je einen Switch pro Spektrallinien-Gruppe.
+                $.each(spectrallines, function(id, row) {
+                    $("#uloptions").append('<li class="list-group-item">' + row[1].grouptitle + '<div class="material-switch pull-right"><input id="' + id + '" type="checkbox" class="options_vl_cb" /><label for="' + id + '" class="label-success" style="margin-top: 10px;"></label></div> </li>');
+                });
+
+                // Hinzufügen der "Qellen anzeigen" Option
+                $("#uloptions").append('<li class="list-group-item">Quellen anzeigen<div class="material-switch pull-right"><input id="references" type="checkbox" class="options_references" value=1 /><label for="references" class="label-success" style="margin-top: 10px;"></label></div></li>');
+
+                // Eventhandlers.
                 $("#SNSelect").on('change', function() {
                     // Remove all outdated options from selectbox.
                     $('#SpektrumSelect').children().remove().end();
@@ -535,6 +507,7 @@
                     xdiff = 0;
                     drawImage();
                 });
+
                 drawImage();
 
             });

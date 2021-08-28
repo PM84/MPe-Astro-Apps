@@ -1,22 +1,45 @@
-var SuperNovae = [
-    'SN1994I', // SN-Typ Ic - He-Absorptionslinie deutlich zu erkennen aber leicht verschoben.
-    'SN1987A', // SN-Typ II - H-Linien SEHR deutlich zu erkennen.
-    'SN1993J', // ==== SN-Typ II - Nur schlecht zu erkennen. Da scheinbar eine He-Linie in der Nähe der Soll-Position liegt.
-    'SN1999dn', // Typ 1b nur sehr schwer erkennbar. sehr breite He-Linie -> Spektrum +21d sehr schön erkennbar.
-    'SN1998S', // Sehr gut! SN-Typ II
-    'SN2007le', // ==== SN-Typ Ia - Si Linien nicht zu erkennen.
-    'SN2005hk', // ==== SN-Typ Ia - Si Linien nicht zu erkennen.
-    'SN1972E', // ==== SN-Typ Ia - Si Linien nicht zu erkennen.
-    'SN2007gr', // SN Typ Ic
-    'SN1998V', // ==== SN-Typ Ia
-    'SN1999cc', // ==== SN-Typ Ia
-    'SN2000cx', // ==== SN-Typ Ia
-    'SN2003gt', // ==== SN-Typ Ia 
-    'SN2005bg', // ==== SN-Typ Ia Kein Spektrum um das Maximum Light
-    'SN2005eu', // ==== SN-Typ Ia Spektrum zeigt deutliche H-Linien; kein Spektrum am maximum Light
-    'SN2005el', // ==== SN-Typ Ia
-    'SN2005hc', // ==== SN-Typ Ia
-    'SN2006ef', // ==== SN-Typ Ia
-    'SN2006ej', // ==== SN-Typ Ia
-
-];
+// YYYX/dd/mm
+var SuperNovaeData = {
+'SN1994D' : {'maxlightdate':'1994/03/21', 'maxabsmag':	-19.32, 'claimedType':'Ia'},
+'SN1994S' : {'maxlightdate':'1994/06/14', 'maxabsmag':	-19.2, 'claimedType':'Ia'},
+'SN1997by' : {'maxlightdate':'1997/05/04', 'maxabsmag':	-19.2, 'claimedType':'Ia'},
+'SN1999cc' : {'maxlightdate':'1999/05/17', 'maxabsmag':	-19.27, 'claimedType':'Ia'},
+'SN1990K' : {'maxlightdate' : '1990/05/30', 'maxabsmag' : -17, 'claimedType' : 'II'},
+'SN1999gi' : {'maxlightdate' : '1999/12/13', 'maxabsmag' : -16.3, 'claimedType' : 'II'},
+'SN2002bx' : {'maxlightdate' : '2002/04/06', 'maxabsmag' : -18.2, 'claimedType' : 'II'},
+// 'SN2002bz' : {'maxlightdate':'2002/04/08', 'maxabsmag':	-19.22, 'claimedType':'Ia'},
+'SN2004aw' : {'maxlightdate' : '2004/03/23', 'maxabsmag' : -18.5, 'claimedType' : 'Ic'},
+'SN2004at' : {'maxlightdate':'2004/03/28', 'maxabsmag':	-19.354, 'claimedType':'Ia'},
+'SN2004fe' : {'maxlightdate' : '2004/11/08', 'maxabsmag' : -18, 'claimedType' : 'Ic'},
+'SN2005ao' : {'maxlightdate':'2005/03/11', 'maxabsmag':	-19.4, 'claimedType':'Ia'},
+'SN2005az' : {'maxlightdate' : '2005/04/15', 'maxabsmag' : -17.4, 'claimedType' : 'Ic'},
+'SN2005hc' : {'maxlightdate':'2005/10/24', 'maxabsmag':	-19.23, 'claimedType':'Ia'},
+'SN2005ms' : {'maxlightdate':'2006/01/07', 'maxabsmag':	-19.4, 'claimedType':'Ia'},
+'SN2006S' : {'maxlightdate':'2006/02/02', 'maxabsmag':	-19.37, 'claimedType':'Ia'},
+'SN2006V' : {'maxlightdate' : '2006/03/23', 'maxabsmag' : -18.14, 'claimedType' : 'II'},
+'SN2006ax' : {'maxlightdate':'2006/03/30', 'maxabsmag':	-19.4, 'claimedType':'Ia'},
+'SN2006ej' : {'maxlightdate':'2006/08/25', 'maxabsmag':	-19.3, 'claimedType':'Ia'},
+'SN2006pr' : {'maxlightdate':'2006/11/26', 'maxabsmag':	-19.234, 'claimedType':'Ia'},
+'SN2007F' : {'maxlightdate':'2007/01/22', 'maxabsmag':	-19.38, 'claimedType':'Ia'},
+'SN2007Y' : {'maxlightdate' : '2007/03/03', 'maxabsmag' : -16.6, 'claimedType' : 'Ib'},
+'SN2007uy' : {'maxlightdate' : '2008/02/01', 'maxabsmag' : -17.6, 'claimedType' : 'Ib'},
+'SN2008D' : {'maxlightdate' : '2008/01/28', 'maxabsmag' : -17.6, 'claimedType' : 'Ib'},
+'SN2008am' : {'maxlightdate' : '2008/02/09', 'maxabsmag' : -23.567, 'claimedType' : 'II'},
+'SN2008ax' : {'maxlightdate' : '2008/03/22', 'maxabsmag' : -16.5, 'claimedType' : 'II'},
+'SN2008bn' : {'maxlightdate' : '2008/04/04', 'maxabsmag' : -18.32, 'claimedType' : 'II'},
+'SN2008bx' : {'maxlightdate' : '2008/05/01', 'maxabsmag' : -17.8, 'claimedType' : 'II'},
+'SNF20080522-011' : {'maxlightdate':'2008/06/01', 'maxabsmag':	-19.327, 'claimedType':'Ia'},
+'SN2008hj' : {'maxlightdate':'2008/12/03', 'maxabsmag':	-19.244, 'claimedType':'Ia'},
+'SN2008ip' : {'maxlightdate' : '2009/01/15', 'maxabsmag' : -18.91, 'claimedType' : 'II'},
+'SN2009jb' : {'maxlightdate':'2009/08/28', 'maxabsmag':	-19.33, 'claimedType':'Ia'},
+'PTF10ndc' : {'maxlightdate':'2010/07/14', 'maxabsmag':	-19.36, 'claimedType':'Ia'},
+'PTF10wnm' : {'maxlightdate':'2010/10/08', 'maxabsmag':	-19.22, 'claimedType':'Ia'},
+'SN2011bm' : {'maxlightdate' : '2011/05/01', 'maxabsmag' : -19, 'claimedType' : 'Ic'},
+'LSQ12fxd' : {'maxlightdate':'2012/11/17', 'maxabsmag':	-19.4, 'claimedType':'Ia'},
+'SN2013ge' : {'maxlightdate' : '2013/11/28', 'maxabsmag' : -17.178, 'claimedType' : 'Ic'},
+'SN2013am' : {'maxlightdate' : '2013/05/10', 'maxabsmag' : -15.492, 'claimedType' : 'II'},
+'SN2013gh' : {'maxlightdate':'2013/08/25', 'maxabsmag':	-19.2, 'claimedType':'Ia'},
+'SN2013gy' : {'maxlightdate':'2013/12/21', 'maxabsmag':	-19.3321, 'claimedType':'Ia'},
+'SN2015bn' : {'maxlightdate' : '2015/03/19', 'maxabsmag' : -22.874, 'claimedType' : 'Ic'},
+'SN2016F': { 'maxlightdate': '2016/01/17', 'maxabsmag': -19.2183, 'claimedType': 'Ia' },
+}

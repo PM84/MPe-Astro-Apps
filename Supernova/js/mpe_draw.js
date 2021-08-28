@@ -15,6 +15,7 @@ function line(x_start, y_start, x_end, y_end, canv, colorLine, lineDash = []) {
     canv.lineTo(x_end, y_end);
     canv.strokeStyle = colorLine;
     canv.stroke();
+    canv.setLineDash([]);
 }
 
 function draw_rectFill(x1, y1, x2, y2, canv, lineThickness = "2", rotation, colorFill = "#FF0000", transp = 0) {
