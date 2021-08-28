@@ -70,12 +70,6 @@
             $(o).html(SupernovaName);
             $("#SNSelect").append(o);
         });
-        // for (var i = 0; i < arrayLength; i++) {
-        //     var j = i + 1;
-        //     var o = new Option("option text", SuperNovae[i]);
-        //     $(o).html(SuperNovae[i]);
-        //     $("#SNSelect").append(o);
-        // }
         var Spektren;
         var subtitle;
         var xdiff = 0;
@@ -162,44 +156,6 @@
                             prepare_references(references, urls);
                         },
                     });
-
-                    // ================ Verschiebung durch Maus ermitteln ==== START
-                    const mouseReference = {
-                        buttonDown: false,
-                        x: false,
-                        y: false,
-                        xbound: false,
-                        ybound: false
-                    }
-
-                    $('#sncanvas').on('mousedown mouseup touchstart', function(e) {
-                        mouseReference.buttonDown = !mouseReference.buttonDown
-                        var rect = canvas.getBoundingClientRect();
-                        mouseReference.xbound = rect.left
-                        mouseReference.ybound = rect.top
-                        if (e.clientX !== undefined) {
-                            mouseReference.x = e.clientX - rect.left
-                            mouseReference.y = e.clientY - rect.top
-                        } else {
-                            mouseReference.x = e.touches[0].clientX - rect.left
-                            mouseReference.y = e.touches[0].clientY - rect.top
-                        }
-
-                    }).on('mousemove touchmove', function(e) {
-                        if ((e.which === 1 && mouseReference.buttonDown) || typeof e.touches === 'object' && typeof e.touches[0] === 'object') {
-                            if (e.pageX !== undefined) {
-                                xdiff = (e.pageX - mouseReference.xbound) - mouseReference.x
-                            } else {
-                                xdiff = (e.touches[0].pageX - mouseReference.xbound) - mouseReference.x
-                            }
-                            drawImage(xdiff);
-
-                        }
-                    }).on('touchend', function(e) {
-                        mouseReference.buttonDown = !mouseReference.buttonDown
-                    })
-                    // ================ Verschiebung durch Maus ermitteln ==== ENDE
-
                 }
 
                 function filter_spectra(spektra) {
@@ -318,15 +274,6 @@
                     var LambdaMinAxis = roundUp(lambdaMin, 0)
                     var dLambdaAxis = (LambdaMaxAxis - LambdaMinAxis) / 10
 
-                    // $('.RangeClsHor').attr('min', fluxMaxAxis);
-                    // $('.RangeClsHor').attr('max', fluxMinAxis);
-                    // $('.RangeClsHor').attr('value', (fluxMin + fluxMax) / 2);
-
-                    // $('.RangeClsVert').attr('min', lambdaMin);
-                    // $('.RangeClsVert').attr('max', lambdaMax);
-                    // $('.RangeClsVert').attr('value', (fluxMin + fluxMax) / 2);
-
-
                     // Zum verschieben des Spektrums
                     clearCanvas(ctx, canvas);
                     drawBox(snName);
@@ -341,18 +288,17 @@
                                 } else {
                                     lineDash = [];
                                 }
-                                draw_vertical_line(margin_x + (value.lambda - lambdaMin) / dLambdapp + xdiff, value, value.color, lineDash);
+                                draw_vertical_line(margin_x + (value.lambda - lambdaMin) / dLambdapp + parseFloat($("#vl_" + id).val()), value, value.color, lineDash);
                                 draw_vertical_line(margin_x + (value.lambda - lambdaMin) / dLambdapp, value, value.color, lineDash, 20);
-                                draw_textbox(margin_x + (value.lambda - lambdaMin) / dLambdapp + xdiff, value, value.color, lineDash, 20);
+                                draw_textbox(margin_x + (value.lambda - lambdaMin) / dLambdapp + parseFloat($("#vl_" + id).val()), value, value.color, lineDash, 20);
+                                if (parseFloat($("#vl_" + id).val()) != 0) {
+                                    $("#dl_" + id).html("Δλ = " + (Math.round(parseFloat($("#vl_" + id).val()) * dLambdapp * 10) / 10) + "Å");
+                                } else {
+                                    $("#dl_" + id).html("Δλ = 0");
+                                }
                             })
                         }
                     });
-
-                    if (xdiff != 0) {
-                        draw_rectFill(margin_x + widthBox - 100, margin_y + 3, margin_x + widthBox - 4, margin_y + 25, ctx, 2, 0, "#fff", 1)
-                        draw_rect(margin_x + widthBox - 100, margin_y + 3, margin_x + widthBox - 4, margin_y + 25, ctx, 2, 0, "blue")
-                        text(margin_x + widthBox - 52, margin_y + 20, "Δλ = " + (Math.round(xdiff * dLambdapp * 10) / 10) + "Å", ctx, "15px Arial", Math.Pi / 2, 'blue', "center")
-                    }
 
                     // Draw Spektrum
                     drawLine(spectraData, lambdaMin, dLambdapp, fluxMin, dFluxpp, "blue", 1);
@@ -470,11 +416,32 @@
 
                 // Erstellen der li Elemente in den Optionen. Je einen Switch pro Spektrallinien-Gruppe.
                 $.each(spectrallines, function(id, row) {
-                    $("#uloptions").append('<li class="list-group-item">' + row[1].grouptitle + '<div class="material-switch pull-right"><input id="' + id + '" type="checkbox" class="options_vl_cb" /><label for="' + id + '" class="label-success" style="margin-top: 10px;"></label></div> </li>');
+                    var linecolor = 'gray';
+                    if (row[1].color.length > 0) {
+                        linecolor = row[1].color;
+                    }
+                    $("#uloptions").append('<li class="list-group-item">' +
+                        row[1].grouptitle +
+                        '<div class="material-switch pull-right">' +
+                        '<input id="' + id + '" type="checkbox" class="options_vl_cb" />' +
+                        '<label for="' + id + '" class="label-success" style="margin-top: 10px;"></label>' +
+                        '</div>' +
+                        '<div class="col-xs-5 material-switch pull-right vl_diff_' + id + ' hidden">' +
+                        '<input id="vl_' + id + '" type="range" class="RangeStyle1 ' + linecolor + ' options_vl RangeClsHor" ' +
+                        'min="-400" max="200" step="0.01" value = 0>' +
+                        '</div>' +
+                        '<div id="dl_' + id + '"  class="col-xs-2 material-switch pull-right vl_diff_' + id + ' hidden">Δλ = 0</div>' +
+                        '</li>');
                 });
 
-                // Hinzufügen der "Qellen anzeigen" Option
-                $("#uloptions").append('<li class="list-group-item">Quellen anzeigen<div class="material-switch pull-right"><input id="references" type="checkbox" class="options_references" value=1 /><label for="references" class="label-success" style="margin-top: 10px;"></label></div></li>');
+                // Hinzufügen der "Qellen anzeigen" Option.
+                $("#uloptions").append('<li class="list-group-item">' +
+                    'Quellen anzeigen' +
+                    '<div class="material-switch pull-right">' +
+                    '<input id="references" type="checkbox" class="options_references" value=1 />' +
+                    '<label for="references" class="label-success" style="margin-top: 10px;"></label>' +
+                    '</div>' +
+                    '</li>');
 
                 // Eventhandlers.
                 $("#SNSelect").on('change', function() {
@@ -490,11 +457,15 @@
                     $('#hl').toggleClass('hidden');
                     drawImage();
                 });
-                $(".options_vl").on('mousemove', function() {
+                $(".options_vl").on('change', function() {
+                    drawImage();
+                });
+                $(".options_vl").on('input', function() {
                     drawImage();
                 });
                 $(".options_vl_cb").on('change', function() {
                     $('#vl').toggleClass('hidden');
+                    $('.vl_diff_' + this.id).toggleClass('hidden');
                     drawImage();
                 });
                 $('#references').click(function() {
@@ -504,7 +475,10 @@
                     drawImage();
                 });
                 $("#ResetOffset").on('click', function() {
-                    xdiff = 0;
+                    $.each(spectrallines, function(id, group) {
+                        $("#dl_" + id).html('');
+                        $("#vl_" + id).val(0);
+                    });
                     drawImage();
                 });
 

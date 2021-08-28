@@ -16,12 +16,27 @@ input[type=range].RangeStyle1::-webkit-slider-runnable-track {
   border: 0.2px solid #010101;
 }
 input[type=range].RangeStyle1.Red::-webkit-slider-runnable-track {
-    background: Red;
-    opacity:0.5;
+  background: Red;
+  opacity: 0.5;
 }
+
 input[type=range].RangeStyle1.Blue::-webkit-slider-runnable-track {
-    background: Blue;
-    opacity:0.5;
+  background: Blue;
+  opacity: 0.5;
+}
+input[type=range].RangeStyle1.darkgray::-webkit-slider-runnable-track {
+  background: Darkgray;
+  opacity: 0.5;
+}
+
+input[type=range].RangeStyle1.green::-webkit-slider-runnable-track {
+  background: Green;
+  opacity: 0.5;
+}
+
+input[type=range].RangeStyle1.purple::-webkit-slider-runnable-track {
+  background: Purple;
+  opacity: 0.5;
 }
 input[type=range].RangeStyle1::-webkit-slider-thumb {
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
@@ -41,6 +56,19 @@ input[type=range].RangeStyle1.Red:focus::-webkit-slider-runnable-track {
 input[type=range].RangeStyle1.Blue:focus::-webkit-slider-runnable-track {
   background: Blue;
      opacity:1;
+}
+input[type=range].RangeStyle1.darkgray:focus::-webkit-slider-runnable-track {
+  background: Darkgray;
+  opacity: 1;
+}
+input[type=range].RangeStyle1.green:focus::-webkit-slider-runnable-track {
+  background: Green;
+  opacity: 1;
+}
+
+input[type=range].RangeStyle1.purple:focus::-webkit-slider-runnable-track {
+  background: Purple;
+  opacity: 1;
 }
 input[type=range].RangeStyle1::-moz-range-track {
   width: 100%;
