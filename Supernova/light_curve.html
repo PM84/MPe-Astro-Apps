@@ -173,6 +173,7 @@
                     },
                     success: function(data) {
                         objectdata = data[SupernovaName];
+                        console.log(objectdata);
                         var dateparts = SuperNovaeData[SupernovaName].maxlightdate.split("/");
                         var maxlightdate = new Date(dateparts[0], dateparts[1] - 1, dateparts[2]);
                         mjd = maxlightdate.getMJD();
