@@ -7,10 +7,8 @@
 // function get_localcache(key) {
 //     // key = CryptoJS.MD5(key).toString();
 //     try {
-//         console.log(localCache.data);
 //             return $.parseJSON(localCache.data[key]);
 //         } catch (e) {
-//             console.log("konnte nicht gelesen werden");
 //             return null;
 //         }
 // }
@@ -57,24 +55,16 @@ function clear_localcache() {
 
 // function cache_exist(param) {
 //     param = CryptoJS.MD5(param).toString();
-//     // console.log("exist?");
-//     console.log(localCache.data);
-//     console.log(localCache.data["85a0a235593c48f57033fd5ab951f286"]);
-//     // console.log(localCache.data[param])
-//     console.log(param);
 //     return localCache.data.hasOwnProperty(param);
 //     // if () {
-//     //     console.log('EXISTIERT NICHT');
 //     //     return false
 //     // } else {
-//     //     console.log('EXISTIERT');
 //     //     return true
 //     // }
 // }
 
 // function cache_get(param) {
 //     param = CryptoJS.MD5(param).toString();
-//     console.log('Getting from cache for param' + param);
 //     return localCache.data[param];
 // }
 

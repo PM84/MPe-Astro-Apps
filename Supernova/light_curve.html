@@ -173,7 +173,6 @@
                     },
                     success: function(data) {
                         objectdata = data[SupernovaName];
-                        console.log(objectdata);
                         var dateparts = SuperNovaeData[SupernovaName].maxlightdate.split("/");
                         var maxlightdate = new Date(dateparts[0], dateparts[1] - 1, dateparts[2]);
                         mjd = maxlightdate.getMJD();
@@ -193,7 +192,6 @@
                         if (get_localcache(urls.urllightcurve) !== null) {
                             console.log("Use cache");
                             lightcurvedata = get_localcache(urls.urllightcurve)
-                            // setUp(lightcurvedata);
                             return false;
                         }
                         return true;
@@ -276,7 +274,6 @@
                 // Mark zero Point.
                 if ($("#maxLight").is(":checked")) {
                     ctx.setLineDash([0]);
-                    console.log(mjd - min_max_time['mintime'])
                     xPos = margin_x + (mjd - min_max_time['mintime']) / dtimepp;
                     line(xPos, heightBox + margin_y, xPos, heightBox + margin_y + 10, ctx, "red");
                     text(xPos, heightBox + margin_y + 20, 0, ctx, "10px Arial", 0, "red", "center");

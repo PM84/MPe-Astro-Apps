@@ -116,7 +116,6 @@
                 var x_Teff = (TeffMaxLog2 - i) / dTeffpp + margin_x + 10;
                 var y_Teff = (2 * margin_y + heightBox);
                 line(x_Teff, y_Teff, x_Teff, y_Teff + 5, ctx, "#000");
-                //                     console.log("x_Teff: "+x_Teff);
                 text(x_Teff - 10, y_Teff + 20, Math.round(2 ** i), ctx, "10px Arial", Math.Pi / 2, "#000")
             }
             text(margin_x / 2 - 5, (heightBox / 2 + margin_y) + 20, "scheinbare Helligkeit", ctx, "20px Arial", -Math.PI / 2, "#000", "center");

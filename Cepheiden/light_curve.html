@@ -193,7 +193,6 @@
                     Object.keys($json_object).forEach(function(key) {
                         var x_t = $json_object[key]['PfPart'] / dtimepp + margin_x;
                         point(x_t + (pf * i) / dtimepp, (MagMax - (parseFloat($json_object[key]['VisMag']) - parseFloat(extinction))) / dMagpp + margin_y, 2, ctx, "#000", "#000");
-                        console.log((parseFloat($json_object[key]['VisMag'])));
                     })
                 }
 
@@ -201,7 +200,6 @@
                 for (i = MagMaxAxis; i <= MagMinAxis; i -= dMagAxis) {
                     if (margin_y + (MagMax - i) / dMagpp < heightBox + 2 * margin_y && margin_y + (MagMax - i) / dMagpp > margin_y) {
                         y_axis = margin_y + (MagMax - i) / dMagpp;
-                        //                         console.log(y_axis);
                         line(margin_x - 5, y_axis, margin_x, y_axis, ctx, "#000");
                         text(margin_x - 30, y_axis + 4, i.toFixed(2), ctx, "10px Arial", Math.Pi / 2, "#000")
                     }
@@ -225,13 +223,10 @@
                     var act_x_Pos = Math.round((newPerPos) / dtimepp + margin_x)
                     draw_vertical_line(act_x_Pos, Math.round(newPerPos * 100) / 100);
 
-
                     var newPerPos = $("#vl_2").val()
                     var act_x_Pos = Math.round((newPerPos) / dtimepp + margin_x)
                     draw_vertical_line(act_x_Pos, Math.round(newPerPos * 100) / 100);
                 }
-
-
 
             }
 

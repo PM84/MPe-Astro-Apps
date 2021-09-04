@@ -120,7 +120,6 @@
         }
 
         function drawHRD(cepheiden, pf_Max, dpfpp) {
-            //                 console.log(cepheiden);
             // Box für HRD zeichnen
             var ctx = canvas.getContext("2d");
             ctx.strokeStyle = "#000";
@@ -130,7 +129,7 @@
 
             // x-Achse (Zeit-Achse)
             var incr = 1
-            //                     if(timeMax<=10){var incr=1}else if(timeMax<=20){var incr=2;}else{incr=5;}
+            //if(timeMax<=10){var incr=1}else if(timeMax<=20){var incr=2;}else{incr=5;}
             for (pf = 0; pf <= pf_Max; pf += incr) {
                 if (pf < 10) {
                     incr = 1
@@ -142,7 +141,6 @@
                 var x_t = Math.log10(pf) / dpfpp + margin_x;
                 var y_t = (margin_y + heightBox);
                 line(x_t, y_t, x_t, y_t + 5, ctx, "#000");
-                //                     console.log("x_t: "+x_t);
                 text(x_t - 10, y_t + 20, pf, ctx, "10px Arial", Math.Pi / 2, "#000")
             }
 
@@ -199,7 +197,6 @@
             for (i = MagMaxAxis; i <= MagMinAxis; i -= dMagAxis) {
                 if (margin_y + (MagMax - i) / dMagpp < heightBox + 2 * margin_y && margin_y + (MagMax - i) / dMagpp > margin_y) {
                     y_axis = margin_y + (MagMax - i) / dMagpp;
-                    //                         console.log(y_axis);
                     line(margin_x - 5, y_axis, margin_x, y_axis, ctx, "#000");
                     text(margin_x - 30, y_axis + 4, i.toFixed(2), ctx, "10px Arial", Math.Pi / 2, "#000")
                 }
@@ -220,7 +217,6 @@
 
             if ($("#vertLine").is(":checked")) {
                 var newPerPos_1 = $("#vl_1").val()
-                //                     console.log(newPerPos);
                 var act_x_Pos_1 = Math.round((Math.log10(newPerPos_1)) / dpfpp + margin_x)
                 if (act_x_Pos_1 >= margin_x) {
                     draw_vertical_line(act_x_Pos_1, Math.round((newPerPos_1) * 100) / 100);
