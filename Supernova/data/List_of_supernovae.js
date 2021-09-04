@@ -40,6 +40,7 @@ var SuperNovaeData = {
 'SN2013am' : {'maxlightdate' : '2013/05/10', 'maxabsmag' : -15.492, 'claimedType' : 'II'},
 'SN2013gh' : {'maxlightdate':'2013/08/25', 'maxabsmag':	-19.2, 'claimedType':'Ia'},
 'SN2013gy' : {'maxlightdate':'2013/12/21', 'maxabsmag':	-19.3321, 'claimedType':'Ia'},
+'SN2014J' : {'maxlightdate':'2014/01/31', 'maxabsmag':	-18.4, 'claimedType':'Ia'},
 'SN2015bn' : {'maxlightdate' : '2015/03/19', 'maxabsmag' : -22.874, 'claimedType' : 'Ic'},
 'SN2016F': { 'maxlightdate': '2016/01/17', 'maxabsmag': -19.2183, 'claimedType': 'Ia' },
 }

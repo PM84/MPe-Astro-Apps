@@ -139,6 +139,28 @@ var spectrallines = {
             'color': 'darkgray',
             'grouptitle': 'Eisenlinien',
         },
+        '4': {
+            'lambda': 7690,
+            'title': 'Fe II',
+            'type': 'absorption',
+            'color': 'darkgray',
+            'grouptitle': 'Eisenlinien',
+        },
+        '5': {
+            'lambda': 7705,
+            'title': 'Fe II',
+            'type': 'absorption',
+            'color': 'darkgray',
+            'grouptitle': 'Eisenlinien',
+        },
+        '6': {
+            'lambda': 7732,
+            'title': 'Fe II',
+            'type': 'absorption',
+            'color': 'darkgray',
+            'grouptitle': 'Eisenlinien',
+        },
+
     },
     'natrium': {
         '1': {
@@ -158,7 +180,7 @@ var spectrallines = {
     },
     'oxygen': {
         '1': {
-            'lambda': 7774,
+            'lambda': 7773,
             'title': 'O I',
             'type': 'emission',
             'color': 'darkgray',
